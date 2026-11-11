@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Support Desk</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #F3EEE8;
+      color: #17645F;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top Bar */
+    .top-bar {
+      width: 100%;
+      border-bottom: 2px solid #17645F;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: #F3EEE8;
+    }
+
+    .top-bar .logo {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      color: #17645F;
+      text-decoration: none;
+    }
+
+    /* Layout */
+    .container {
+      width: 100%;
+      max-width: 820px;
+      margin: 32px auto;
+      padding: 0 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* Cards */
+    .card {
+      background-color: #F3EEE8;
+      border: 1.5px solid #17645F;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 4px 16px rgba(23, 100, 95, 0.08);
+    }
+
+    .card-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: #17645F;
+    }
+
+    /* Forms */
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+
+    label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #17645F;
+    }
+
+    input[type="text"],
+    textarea {
+      width: 100%;
+      padding: 10px 14px;
+      background-color: #F3EEE8;
+      border: 1.5px solid #17645F;
+      border-radius: 12px;
+      color: #17645F;
+      font-family: inherit;
+      font-size: 14px;
+      line-height: 1.5;
+      outline: none;
+      transition: border-color 0.15s ease;
+    }
+
+    input[type="text"]:focus,
+    textarea:focus {
+      border-color: #FF6845;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 90px;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background-color: #FF6845;
+      color: #FFFFFF;
+      border: 1.5px solid #FF6845;
+      border-radius: 12px;
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: opacity 0.15s ease;
+    }
+
+    .btn:hover:not(:disabled) {
+      opacity: 0.9;
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    /* Conversation Thread */
+    .thread-box {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-height: 380px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .thread-empty {
+      font-size: 14px;
+      font-style: italic;
+      color: #17645F;
+      padding: 12px 0;
+    }
+
+    .message {
+      padding: 12px 16px;
+      border-radius: 12px;
+      border: 1.5px solid #17645F;
+      font-size: 14px;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .message.customer {
+      align-self: flex-end;
+      max-width: 85%;
+      border-color: #FF6845;
+      text-align: left;
+    }
+
+    .message.agent {
+      align-self: flex-start;
+      max-width: 85%;
+      border-color: #17645F;
+    }
+
+    .message-author {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+
+    .message.customer .message-author {
+      color: #17645F;
+    }
+
+    .message.agent .message-author {
+      color: #17645F;
+    }
+
+    /* Metadata / Triage Grid */
+    .triage-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .triage-item {
+      border: 1.5px solid #17645F;
+      border-radius: 12px;
+      padding: 10px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .triage-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .triage-val {
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    /* Draft Box */
+    .draft-box {
+      border: 1.5px solid #17645F;
+      border-radius: 12px;
+      padding: 14px;
+      font-size: 14px;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      word-break: break-word;
+      margin-bottom: 16px;
+      background-color: #F3EEE8;
+    }
+
+    /* Approval Panel */
+    .approval-panel {
+      border: 2px solid #FF6845;
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 16px;
+      box-shadow: 0 4px 16px rgba(23, 100, 95, 0.08);
+    }
+
+    .approval-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #17645F;
+      margin-bottom: 12px;
+    }
+
+    /* Spinner */
+    .spinner {
+      width: 14px;
+      height: 14px;
+      border: 2px solid #FFFFFF;
+      border-top-color: transparent;
+      border-radius: 50%;
+      display: inline-block;
+      animation: spin 0.7s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .container {
+        margin: 16px auto;
+      }
+      .card {
+        padding: 16px;
+      }
+      .message.customer,
+      .message.agent {
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Top Bar -->
+  <header class="top-bar">
+    <div class="logo">Support Desk</div>
+  </header>
+
+  <main class="container">
+    <!-- Ticket Form Card -->
+    <section class="card">
+      <h2 class="card-title">New Support Ticket</h2>
+      <form id="ticket-form">
+        <div class="form-group">
+          <label for="customer-id">Customer ID</label>
+          <input
+            type="text"
+            id="customer-id"
+            placeholder="e.g. customer-001"
+            required
+            autocomplete="off"
+          />
+        </div>
+        <div class="form-group">
+          <label for="message-input">Message</label>
+          <textarea
+            id="message-input"
+            rows="3"
+            placeholder="Describe your issue..."
+            required
+          ></textarea>
+        </div>
+        <button type="submit" id="send-ticket-btn" class="btn">
+          <span>Send ticket</span>
+        </button>
+      </form>
+    </section>
+
+    <!-- Submission Details & Draft -->
+    <section id="triage-section" class="card hidden">
+      <h2 class="card-title">Triage Details</h2>
+      <div class="triage-grid">
+        <div class="triage-item">
+          <span class="triage-label">Category</span>
+          <span id="triage-category" class="triage-val">-</span>
+        </div>
+        <div class="triage-item">
+          <span class="triage-label">Urgency</span>
+          <span id="triage-urgency" class="triage-val">-</span>
+        </div>
+        <div class="triage-item">
+          <span class="triage-label">Review Score</span>
+          <span id="triage-score" class="triage-val">-</span>
+        </div>
+        <div class="triage-item">
+          <span class="triage-label">Attempts</span>
+          <span id="triage-attempts" class="triage-val">-</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Draft Reply</label>
+        <div id="triage-draft" class="draft-box"></div>
+      </div>
+
+      <!-- Billing Human Approval Panel -->
+      <div id="approval-panel" class="approval-panel hidden">
+        <div class="approval-title">Billing Approval Required</div>
+        <div class="form-group">
+          <label for="approval-textarea">Review or Edit Reply</label>
+          <textarea id="approval-textarea" rows="6"></textarea>
+        </div>
+        <div class="btn-group">
+          <button type="button" id="approve-send-btn" class="btn">
+            <span>Approve & send</span>
+          </button>
+          <button type="button" id="save-edit-send-btn" class="btn">
+            <span>Save edit & send</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Conversation Thread Card -->
+    <section class="card">
+      <h2 class="card-title">Conversation Thread</h2>
+      <div id="thread-box" class="thread-box">
+        <div class="thread-empty">Enter a Customer ID to view conversation history.</div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const customerIdInput = document.getElementById("customer-id");
+    const messageInput = document.getElementById("message-input");
+    const ticketForm = document.getElementById("ticket-form");
+    const sendTicketBtn = document.getElementById("send-ticket-btn");
+
+    const triageSection = document.getElementById("triage-section");
+    const triageCategory = document.getElementById("triage-category");
+    const triageUrgency = document.getElementById("triage-urgency");
+    const triageScore = document.getElementById("triage-score");
+    const triageAttempts = document.getElementById("triage-attempts");
+    const triageDraft = document.getElementById("triage-draft");
+
+    const approvalPanel = document.getElementById("approval-panel");
+    const approvalTextarea = document.getElementById("approval-textarea");
+    const approveSendBtn = document.getElementById("approve-send-btn");
+    const saveEditSendBtn = document.getElementById("save-edit-send-btn");
+
+    const threadBox = document.getElementById("thread-box");
+
+    let currentCustomerId = "";
+
+    function setButtonLoading(button, isLoading, loadingText = "Loading...") {
+      const originalText = button.getAttribute("data-original-text") || button.textContent.trim();
+      if (isLoading) {
+        button.setAttribute("data-original-text", originalText);
+        button.disabled = true;
+        button.innerHTML = `<span class="spinner"></span> <span>${loadingText}</span>`;
+      } else {
+        button.disabled = false;
+        button.innerHTML = `<span>${originalText}</span>`;
+      }
+    }
+
+    async function loadThread(customerId) {
+      const id = customerId.trim();
+      if (!id) {
+        threadBox.innerHTML = '<div class="thread-empty">Enter a Customer ID to view conversation history.</div>';
+        return;
+      }
+
+      try {
+        const res = await fetch(`/api/thread/${encodeURIComponent(id)}`);
+        if (!res.ok) throw new Error("Failed to load thread history");
+        const data = await res.json();
+        renderThread(data.messages || []);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function renderThread(messages) {
+      if (!messages || messages.length === 0) {
+        threadBox.innerHTML = '<div class="thread-empty">No previous messages for this Customer ID.</div>';
+        return;
+      }
+
+      threadBox.innerHTML = "";
+      messages.forEach((msg) => {
+        const bubble = document.createElement("div");
+        bubble.className = `message ${msg.role === "customer" ? "customer" : "agent"}`;
+
+        const author = document.createElement("div");
+        author.className = "message-author";
+        author.textContent = msg.role === "customer" ? "Customer" : "Support Agent";
+
+        const content = document.createElement("div");
+        content.textContent = msg.content;
+
+        bubble.appendChild(author);
+        bubble.appendChild(content);
+        threadBox.appendChild(bubble);
+      });
+
+      threadBox.scrollTop = threadBox.scrollHeight;
+    }
+
+    let customerIdDebounce;
+    customerIdInput.addEventListener("input", () => {
+      clearTimeout(customerIdDebounce);
+      customerIdDebounce = setTimeout(() => {
+        const val = customerIdInput.value.trim();
+        if (val !== currentCustomerId) {
+          currentCustomerId = val;
+          loadThread(val);
+        }
+      }, 400);
+    });
+
+    customerIdInput.addEventListener("blur", () => {
+      const val = customerIdInput.value.trim();
+      if (val !== currentCustomerId) {
+        currentCustomerId = val;
+        loadThread(val);
+      }
+    });
+
+    ticketForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const customerId = customerIdInput.value.trim();
+      const message = messageInput.value.trim();
+      if (!customerId || !message) return;
+
+      currentCustomerId = customerId;
+      setButtonLoading(sendTicketBtn, true, "Sending ticket...");
+      approvalPanel.classList.add("hidden");
+
+      try {
+        const res = await fetch("/api/ticket", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ customer_id: customerId, message: message })
+        });
+
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          throw new Error(errData.detail || "Error processing ticket");
+        }
+
+        const data = await res.json();
+
+        // Show metadata and draft
+        triageCategory.textContent = data.category || "-";
+        triageUrgency.textContent = data.urgency || "-";
+        triageScore.textContent = data.score != null ? `${data.score}/10` : "-";
+        triageAttempts.textContent = data.attempts != null ? data.attempts : "-";
+        triageDraft.textContent = data.draft || "";
+        triageSection.classList.remove("hidden");
+
+        if (data.status === "pending_approval") {
+          // Billing approval panel
+          approvalTextarea.value = data.draft || "";
+          approvalPanel.classList.remove("hidden");
+          // Refresh thread so customer message shows
+          await loadThread(customerId);
+        } else {
+          // Sent automatically (non-billing)
+          messageInput.value = "";
+          await loadThread(customerId);
+        }
+      } catch (err) {
+        alert(err.message || "Failed to process ticket");
+      } finally {
+        setButtonLoading(sendTicketBtn, false);
+      }
+    });
+
+    approveSendBtn.addEventListener("click", async () => {
+      const customerId = customerIdInput.value.trim();
+      if (!customerId) return;
+
+      setButtonLoading(approveSendBtn, true, "Approving...");
+      saveEditSendBtn.disabled = true;
+
+      try {
+        const res = await fetch("/api/approve", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            customer_id: customerId,
+            action: "approve"
+          })
+        });
+
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          throw new Error(errData.detail || "Approval failed");
+        }
+
+        const data = await res.json();
+        approvalPanel.classList.add("hidden");
+        messageInput.value = "";
+        if (data.draft) triageDraft.textContent = data.draft;
+        await loadThread(customerId);
+      } catch (err) {
+        alert(err.message || "Approval failed");
+      } finally {
+        setButtonLoading(approveSendBtn, false);
+        saveEditSendBtn.disabled = false;
+      }
+    });
+
+    saveEditSendBtn.addEventListener("click", async () => {
+      const customerId = customerIdInput.value.trim();
+      const editedText = approvalTextarea.value.trim();
+      if (!customerId || !editedText) return;
+
+      setButtonLoading(saveEditSendBtn, true, "Saving & sending...");
+      approveSendBtn.disabled = true;
+
+      try {
+        const res = await fetch("/api/approve", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            customer_id: customerId,
+            action: "edit",
+            text: editedText
+          })
+        });
+
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          throw new Error(errData.detail || "Save edit failed");
+        }
+
+        const data = await res.json();
+        approvalPanel.classList.add("hidden");
+        messageInput.value = "";
+        triageDraft.textContent = editedText;
+        await loadThread(customerId);
+      } catch (err) {
+        alert(err.message || "Save edit failed");
+      } finally {
+        setButtonLoading(saveEditSendBtn, false);
+        approveSendBtn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
